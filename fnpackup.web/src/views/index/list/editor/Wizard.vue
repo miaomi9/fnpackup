@@ -202,7 +202,7 @@ export default {
                         deleteField(item);
 
                         //删除验证的辅助字段，并将对应不同类型的辅助字段的值还原到真正字段
-                        //比如{required:true,_requred:true,message:'',_required_message:'111'}->{required:true,message:'11'}
+                        //1.比如{required:true,_requred:true,message:'',_required_message:'111'}->{required:true,message:'11'}
                         item.rules = item.rules.reduce((arr,rule)=>{
                             const keys = Object.keys(validateTypes.filter(c=>c.value == rule._type)[0].default);
                             arr.push(Object.assign(keys.reduce((json,value)=>{
