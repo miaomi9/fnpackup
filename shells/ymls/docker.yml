@@ -46,11 +46,6 @@ jobs:
 
     - name: create docker image manifest
       run: |
-        docker manifest rm snltty/fnpackup:latest 2>/dev/null || true \
-        docker manifest rm snltty/fnpackup:v{{version}} 2>/dev/null || true \
-        docker manifest rm snltty/fnpackup:amd64 2>/dev/null || true \
-        docker manifest rm snltty/fnpackup:arm64 2>/dev/null || true \
-        docker manifest rm snltty/fnpackup:arm 2>/dev/null || true \
         docker pull --platform linux/arm/v7 snltty/fnpackup-arm:latest &&  \
         docker tag snltty/fnpackup-arm:latest snltty/fnpackup:arm &&  \
         docker push snltty/fnpackup:arm &&  \
