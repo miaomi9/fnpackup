@@ -90,11 +90,11 @@ export default {
             });
             Object.assign(fields,item);
             Object.assign(item,fields);
+            return item;
         }
         
         props.item.rules.forEach(c=>{
             buildValidateField(c);
-           
         });
 
         const handleAdd = (index)=>{

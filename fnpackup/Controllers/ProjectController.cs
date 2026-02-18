@@ -84,13 +84,17 @@ namespace fnpackup.Controllers
             {
                 return new List<PackResultInfo> { new PackResultInfo { FileName = string.Empty, Msg = "请将manifest中的arch转为platform" } };
             }
+            if(manifest.TryGetValue("appname",out string appname) == false)
+            {
+                return new List<PackResultInfo> { new PackResultInfo { FileName = string.Empty, Msg = "未找到appname" } };
+            }
 
             Backup(name);
 
             List<PackResultInfo> result = new List<PackResultInfo>();
             if (string.IsNullOrWhiteSpace(platform))
             {
-                result.Add(PackRename(name, manifest));
+                result.Add(PackRename(name, appname, manifest));
             }
             else
             {
@@ -103,7 +107,7 @@ namespace fnpackup.Controllers
 
                         CopyPlatform(name, item, server);
 
-                        result.Add(PackRename(name, manifest));
+                        result.Add(PackRename(name, appname, manifest));
                     }
                     catch (Exception ex)
                     {
@@ -127,7 +131,7 @@ namespace fnpackup.Controllers
             ClearFile(platformDir);
             return DirAreEmpty(platformDir);
         }
-        private PackResultInfo PackRename(string name, Dictionary<string, string> manifest)
+        private PackResultInfo PackRename(string name,string appname, Dictionary<string, string> manifest)
         {
             string msg = CommandHelper.Execute($"fnpack", $" build", [], Path.Join(root, name), out string error);
             if (string.IsNullOrWhiteSpace(error) == false)
@@ -138,8 +142,8 @@ namespace fnpackup.Controllers
             {
                 return new PackResultInfo { FileName = manifest["platform"], Msg = msg };
             }
-            string newName = $"{name}-{manifest["version"]}-{manifest["platform"]}";
-            System.IO.File.Move(Path.Join(root, name, $"{name}.fpk"), Path.Join(root, name, $"{newName}.fpk"), true);
+            string newName = $"{appname}-{manifest["version"]}-{manifest["platform"]}";
+            System.IO.File.Move(Path.Join(root, name, $"{appname}.fpk"), Path.Join(root, name, $"{newName}.fpk"), true);
             return new PackResultInfo { FileName = $"{newName}.fpk", Msg = msg };
         }
         private void CopyPlatform(string name, string platform, string dist)
