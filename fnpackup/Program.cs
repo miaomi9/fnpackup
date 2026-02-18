@@ -115,6 +115,12 @@ namespace fnpackup
                 EnableDirectoryBrowsing = false
             };
             options.DefaultFilesOptions.DefaultFileNames = ["index.html", "index.htm", "default.html", "default.htm"];
+            options.StaticFileOptions.OnPrepareResponse = ctx =>
+            {
+                ctx.Context.Response.Headers.CacheControl = "no-cache, no-store, must-revalidate";
+                ctx.Context.Response.Headers.Pragma = "no-cache";
+                ctx.Context.Response.Headers.Expires = "0";
+            };
             app.UseFileServer(options);
             app.UseDefaultFiles(options.DefaultFilesOptions);
 
