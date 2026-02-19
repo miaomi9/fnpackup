@@ -48,13 +48,13 @@ jobs:
       run: |
         docker pull --platform linux/arm/v7 snltty/fnpackup-arm:latest &&  \
         docker tag snltty/fnpackup-arm:latest snltty/fnpackup:arm &&  \
-        docker push snltty/fnpackup:arm &&  \
+        docker push --platform linux/arm/v7 snltty/fnpackup:arm &&  \
         docker pull --platform linux/arm64 snltty/fnpackup-arm64:latest &&  \
         docker tag snltty/fnpackup-arm64:latest snltty/fnpackup:arm64 &&  \
-        docker push snltty/fnpackup:arm64 &&  \
+        docker push --platform linux/arm64 snltty/fnpackup:arm64 &&  \
         docker pull --platform linux/amd64 snltty/fnpackup-x64:latest &&  \
         docker tag snltty/fnpackup-x64:latest snltty/fnpackup:amd64 &&  \
-        docker push snltty/fnpackup:amd64 &&  \
+        docker push --platform linux/amd64 snltty/fnpackup:amd64 &&  \
         docker manifest create snltty/fnpackup:latest snltty/fnpackup:amd64 snltty/fnpackup:arm64 snltty/fnpackup:arm && \
         docker manifest create snltty/fnpackup:v{{version}} snltty/fnpackup:amd64 snltty/fnpackup:arm64 snltty/fnpackup:arm && \
         docker manifest push snltty/fnpackup:latest && \
