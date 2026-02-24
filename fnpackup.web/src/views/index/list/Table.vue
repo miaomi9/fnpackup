@@ -50,7 +50,7 @@
             <div>
                 <el-pagination small background layout="prev, pager, next" 
                 :total="projects.page.count"
-                :current-page="1" 
+                :current-page="projects.page.p" 
                 :page-size="projects.page.ps" @current-change="handlePageChange"/>
             </div>
         </div>

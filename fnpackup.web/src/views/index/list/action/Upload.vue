@@ -28,8 +28,8 @@ import { nextTick, onMounted, reactive, ref, watch } from 'vue';
 import {Plus,Refresh,Document,Folder} from '@element-plus/icons-vue'
 import { useLogger } from '../../logger';
 import { useProjects } from '../list';
-import {fetchFileUpload, xhrApi} from '@/api/api'
-import { ElMessage, ElNotification } from 'element-plus';
+import {fetchFileUpload} from '@/api/api'
+import { ElNotification } from 'element-plus';
 export default {
     props: ['modelValue'],
     emits: ['update:modelValue'],

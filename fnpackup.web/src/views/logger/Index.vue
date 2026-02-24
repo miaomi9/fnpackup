@@ -23,7 +23,7 @@
                         <div>
                             <el-pagination small background layout="prev, pager, next" 
                             :total="state.page.count"
-                            :current-page="1" 
+                            :current-page="state.page.p" 
                             :page-size="state.page.ps" @current-change="handlePageChange"/>
                         </div>
                     </div>
