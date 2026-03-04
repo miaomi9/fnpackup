@@ -25,6 +25,13 @@
             </el-form-item>
         </el-col>
     </el-row>
+    <el-row class="w-100 mgt-1">
+        <el-col :span="24">
+            <el-form-item label="辅助文本">
+                <el-input v-model="item.helpText" ></el-input>
+            </el-form-item>
+        </el-col>
+    </el-row>
 </template>
 
 <script>

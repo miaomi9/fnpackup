@@ -15,11 +15,11 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.ACTIONS_TOKEN }}
         with:
-          tag_name: v1.0.6
-          release_name: v1.0.6.${{ steps.date.outputs.today }}
+          tag_name: v1.0.7
+          release_name: v1.0.7.${{ steps.date.outputs.today }}
           draft: false
           prerelease: false
-          body: "1. 一些累计更新，写了一些新bug\r\n2. 修复向导配置错误\r\n3. 修复文件夹名与appname不一致的打包失败问题"
+          body: "1. 一些累计更新，写了一些新bug\r\n2. #3"
       - name: setup node.js
         uses: actions/setup-node@v2
         with:
@@ -46,5 +46,5 @@ jobs:
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ./public/publish-fpk/docker/fnpackup-docker.fpk
-          asset_name: fnpackup-docker-v1.0.6.fpk
+          asset_name: fnpackup-docker-v1.0.7.fpk
           asset_content_type: application/fpk

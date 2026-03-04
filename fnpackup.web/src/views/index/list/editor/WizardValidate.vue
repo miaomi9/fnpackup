@@ -72,7 +72,7 @@ export default {
 
         const logger = useLogger();
         const buildValidateField = (item)=>{
-            const vtypes = JSON.parse(JSON.stringify(props.vtypes))
+            const vtypes = JSON.parse(JSON.stringify(props.vtypes));
             if(!item['_type']){
                 item['_type'] = vtypes.filter(c=>item[c.value] !== undefined)[0].value;
             }
@@ -87,7 +87,7 @@ export default {
                     [`_${value.value}_message`]: item[value.value] !== undefined ?  item.message : ''
                 });
                 return json;
-            });
+            },{});
             Object.assign(fields,item);
             Object.assign(item,fields);
             return item;

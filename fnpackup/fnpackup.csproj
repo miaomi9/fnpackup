@@ -8,12 +8,11 @@
 		<Authors>snltty</Authors>
 		<Company>snltty</Company>
 		<PackageReleaseNotes>fnpackup</PackageReleaseNotes>
-		<Version>1.0.6</Version>
-		<AssemblyVersion>1.0.6</AssemblyVersion>
-		<FileVersion>1.0.6</FileVersion>
+		<Version>1.0.7</Version>
+		<AssemblyVersion>1.0.7</AssemblyVersion>
+		<FileVersion>1.0.7</FileVersion>
 		<Description>1. 一些累计更新，写了一些新bug
-2. 修复向导配置错误
-3. 修复文件夹名与appname不一致的打包失败问题</Description>
+2. #3</Description>
 		<Copyright>snltty</Copyright>
 		<JsonSerializerIsReflectionEnabledByDefault>true</JsonSerializerIsReflectionEnabledByDefault>
 		<ApplicationIcon>ico.ico</ApplicationIcon>

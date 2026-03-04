@@ -213,13 +213,12 @@ export default {
                         const json = JSON.parse(JSON.stringify(state.ruleForm));
                         json.install_dep_apps = json.install_dep_apps.join(':');
 
-                        const keys = Object.keys(json);
-                        const content = keys.reduce((arr,item)=>{
+                        const content = Object.keys(json).reduce((arr,item)=>{
                             let value = json[item];
                             if(typeof value == 'string'){
                                 value = value.trim();
                             }
-                            if(value){
+                            if(value !== '' && value !== undefined){
                                 if(item == 'desc'){
                                     value  = `"""${value}"""`
                                 }

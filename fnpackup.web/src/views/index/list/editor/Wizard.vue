@@ -57,7 +57,7 @@ export default {
             {label:'单选按钮',value:'radio',default:'',field:'initValue'},
             {label:'多选框',value:'checkbox',default:[],field:'initValue'},
             {label:'下拉框',value:'select',default:'',field:'initValue'},
-            {label:'开关',value:'switch',default:true,field:'initValue'},
+            {label:'开关',value:'switch',default:true,field:'initValue',init:(value)=>{ return value == 'true' },format:(value)=>{return value.toString()}},
             {label:'提示文本',value:'tips',default:'',field:'helpText'},
         ];
         const defaultItem = Object.assign({
@@ -80,7 +80,9 @@ export default {
                 const type = types.filter(c=>c.value == step.items[i].type)[0];
                 if(type){
                     step.items[i][`_${step.items[i].type}`] = step.items[i][type.field];
-
+                    if(step.items[i][`_${step.items[i].type}`] !== undefined && type.init){
+                        step.items[i][`_${step.items[i].type}`] = type.init(step.items[i][`_${step.items[i].type}`]);
+                    }
                 }
             }
             step['_plus_field'] = Object.keys(step).filter(c=>['stepTitle','items','_id'].indexOf(c) < 0).map(c=>{
@@ -195,10 +197,14 @@ export default {
                     step.items.forEach(item=>{
                         //删除字段的辅助字段，每个字段类型有一个单独的初始值辅助字段
                         types.forEach(type=>{
-                            delete item[type.field];
+                            if(type.field !== 'helpText')
+                                delete item[type.field];
                         });
-                        const type = types.filter(c=>c.value == item.type)[0]
+                        const type = types.filter(c=>c.value == item.type)[0];
                         item[type.field] = item[`_${item.type}`];
+                        if(type.format && item[type.field] !== undefined){
+                            item[type.field] = type.format(item[type.field]);
+                        }
                         deleteField(item);
 
                         //删除验证的辅助字段，并将对应不同类型的辅助字段的值还原到真正字段
