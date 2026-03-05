@@ -486,11 +486,16 @@ namespace fnpackup.Controllers
                 Directory.CreateDirectory(Path.Join(dir, "app"));
                 CommandHelper.Execute($"tar", $" -xzvf app.tgz -C app", [], dir, out error);
 
-
+                if(Directory.Exists(Path.Join(dir, "app", "config")))
+                {
+                    System.IO.Directory.Delete(Path.Join(dir, "app", "config"), true);
+                }
                 if (Directory.Exists(Path.Join(dir, "building")) == false)
                     System.IO.Directory.CreateDirectory(Path.Join(dir, "building"));
                 if (Directory.Exists(Path.Join(dir, "building", "platform")) == false)
                     System.IO.Directory.CreateDirectory(Path.Join(dir, "building", "platform"));
+
+
             }
             catch (Exception)
             {
