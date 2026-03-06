@@ -36,29 +36,18 @@ namespace fnpackup.Controllers
         [Route("/system/signin")]
         public async Task<string> SignIn([FromServices] IMemoryCache memoryCache)
         {
+
+            if (await CheckLogin().ConfigureAwait(false) == false)
+            {
+                return string.Empty;
+            }
+
             if (Request.Cookies.TryGetValue("fnpackup-token", out var token)
                && memoryCache.TryGetValue<string>("fnpackup-token", out var token1))
             {
                 if (token == token1)
                 {
                     return "OK";
-                }
-            }
-
-            if (Environment.GetEnvironmentVariable("FNOS_HTTP_LOGIN") != "false")
-            {
-                string host = "localhost";
-                string port = Environment.GetEnvironmentVariable("FNOS_HTTP_PORT") ?? "5666";
-#if DEBUG
-                host = "192.168.1.82";
-#endif
-                string url = $"http://{host}:{port}/app-center/v1/app/list?language=zh";
-                using HttpClient client = httpClientFactory.CreateClient();
-                client.DefaultRequestHeaders.Add("Authorization", $"trim {Request.Cookies["fnos-token"]}");
-                HttpResponseMessage resp = await client.GetAsync(url);
-                if (resp.StatusCode != System.Net.HttpStatusCode.OK)
-                {
-                    return string.Empty;
                 }
             }
 
@@ -73,7 +62,27 @@ namespace fnpackup.Controllers
             });
             return "OK";
         }
-        public string Md5(string input)
+        private async Task<bool> CheckLogin()
+        {
+            if (Environment.GetEnvironmentVariable("FNOS_HTTP_LOGIN") != "false")
+            {
+                string host = "localhost";
+                string port = Environment.GetEnvironmentVariable("FNOS_HTTP_PORT") ?? "5666";
+#if DEBUG
+                host = "192.168.1.82";
+#endif
+                string url = $"http://{host}:{port}/app-center/v1/app/list?language=zh";
+                using HttpClient client = httpClientFactory.CreateClient();
+                client.DefaultRequestHeaders.Add("Authorization", $"trim {Request.Cookies["fnos-token"]}");
+                HttpResponseMessage resp = await client.GetAsync(url);
+                if (resp.StatusCode != System.Net.HttpStatusCode.OK)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+        private string Md5(string input)
         {
             byte[] data = MD5.HashData(Encoding.Default.GetBytes(input));
             StringBuilder sBuilder = new();
