@@ -64,7 +64,7 @@ namespace fnpackup.Controllers
         }
         private async Task<bool> CheckLogin()
         {
-            if (Environment.GetEnvironmentVariable("FNOS_HTTP_LOGIN") != "false")
+            if (Environment.GetEnvironmentVariable("FNOS_HTTP_LOGIN") == "true")
             {
                 try
                 {
