@@ -1,10 +1,12 @@
 using fnpackup.Controllers;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Primitives;
 using System.Collections.Frozen;
 using System.Net;
 using System.Reflection;
+using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Text.Json.Serialization;
@@ -60,6 +62,8 @@ namespace fnpackup
             builder.Services.AddDynamicStaticFile();
             builder.Services.AddLogger();
 
+            builder.Services.AddMemoryCache();
+
             var app = builder.Build();
             app.UseCors("AllowAll");
             app.UseRouting();
@@ -68,7 +72,42 @@ namespace fnpackup
             app.UseDynamicStaticFile();
             app.UseLogger();
 
+            app.UseMiddleware<CookieAuthMiddleware>();
+
             app.Run();
+        }
+    }
+
+    public class CookieAuthMiddleware
+    {
+        private readonly RequestDelegate next;
+        private readonly IMemoryCache memoryCache;
+        public CookieAuthMiddleware(RequestDelegate next, IMemoryCache memoryCache)
+        {
+            this.next = next;
+            this.memoryCache = memoryCache;
+        }
+
+        public async Task InvokeAsync(HttpContext context)
+        {
+            if (context.Request.Path == "/system/signin")
+            {
+                await next(context);
+                return;
+            }
+
+            if (context.Request.Cookies.TryGetValue("fnpackup-token", out var token)
+                && memoryCache.TryGetValue<string>("fnpackup-token", out var token1))
+            {
+                if (token == token1)
+                {
+                    await next(context);
+                    return;
+                }
+            }
+
+            context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+            await context.Response.WriteAsync("Invalid token");
         }
     }
 

@@ -56,6 +56,13 @@ export const fetchSystemVersion = () => {
         headers:{'Content-Type':'application/json'}
     }).then(c=>c.text());
 }
+export const fetchSystemSignIn = ()=>{
+    return fetchApi('/system/signin',{
+        method:'GET',
+        headers:{'Content-Type':'application/json'},
+    }).then(res => res.text());
+}
+
 
 export const fetchProjectCreate = (data) => { 
     return fetchApi(`/project/create`,{

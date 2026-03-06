@@ -1,8 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 using System.IO.Compression;
 using System.Reflection;
+using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
+using System.Xml.Linq;
 
 namespace fnpackup.Controllers
 {
@@ -27,6 +30,51 @@ namespace fnpackup.Controllers
         {
             return $"v{string.Join(".", Assembly.GetExecutingAssembly().GetName().Version.ToString().Split('.').Take(3))}";
         }
+
+
+        [HttpGet]
+        [Route("/system/signin")]
+        public async Task<string> SignIn([FromServices] IMemoryCache memoryCache)
+        {
+            if (Environment.GetEnvironmentVariable("FNOS_HTTP_LOGIN") != "false")
+            {
+                string host = "localhost";
+                string port = Environment.GetEnvironmentVariable("FNOS_HTTP_PORT") ?? "5666";
+#if DEBUG
+                host = "192.168.1.82";
+#endif
+                string url = $"http://{host}:{port}/app-center/v1/app/list?language=zh";
+                using HttpClient client = httpClientFactory.CreateClient();
+                client.DefaultRequestHeaders.Add("Authorization", $"trim {Request.Cookies["fnos-token"]}");
+                HttpResponseMessage resp = await client.GetAsync(url);
+                if (resp.StatusCode != System.Net.HttpStatusCode.OK)
+                {
+                    return string.Empty;
+                }
+            }
+
+            string value = Md5(Guid.NewGuid().ToString());
+            memoryCache.Set("fnpackup-token", value, TimeSpan.FromMilliseconds(60 * 1000));
+            Response.Cookies.Append("fnpackup-token", value, new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.Lax,
+                Path = "/"
+            });
+            return "OK";
+        }
+        public string Md5(string input)
+        {
+            byte[] data = MD5.HashData(Encoding.Default.GetBytes(input));
+            StringBuilder sBuilder = new();
+            for (int i = 0; i < data.Length; i++)
+            {
+                sBuilder.Append(data[i].ToString("x2"));
+            }
+            return sBuilder.ToString();
+        }
+
 
         [HttpPost]
         [Route("/project/build")]
@@ -84,7 +132,7 @@ namespace fnpackup.Controllers
             {
                 return new List<PackResultInfo> { new PackResultInfo { FileName = string.Empty, Msg = "请将manifest中的arch转为platform" } };
             }
-            if(manifest.TryGetValue("appname",out string appname) == false)
+            if (manifest.TryGetValue("appname", out string appname) == false)
             {
                 return new List<PackResultInfo> { new PackResultInfo { FileName = string.Empty, Msg = "未找到appname" } };
             }
@@ -131,7 +179,7 @@ namespace fnpackup.Controllers
             ClearFile(platformDir);
             return DirAreEmpty(platformDir);
         }
-        private PackResultInfo PackRename(string name,string appname, Dictionary<string, string> manifest)
+        private PackResultInfo PackRename(string name, string appname, Dictionary<string, string> manifest)
         {
             string msg = CommandHelper.Execute($"fnpack", $" build", [], Path.Join(root, name), out string error);
             if (string.IsNullOrWhiteSpace(error) == false)
@@ -486,7 +534,7 @@ namespace fnpackup.Controllers
                 Directory.CreateDirectory(Path.Join(dir, "app"));
                 CommandHelper.Execute($"tar", $" -xzvf app.tgz -C app", [], dir, out error);
 
-                if(Directory.Exists(Path.Join(dir, "app", "config")))
+                if (Directory.Exists(Path.Join(dir, "app", "config")))
                 {
                     System.IO.Directory.Delete(Path.Join(dir, "app", "config"), true);
                 }
