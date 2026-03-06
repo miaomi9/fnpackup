@@ -66,8 +66,8 @@ namespace fnpackup.Controllers
             memoryCache.Set("fnpackup-token", value, new MemoryCacheEntryOptions().SetSlidingExpiration(TimeSpan.FromMilliseconds(60 * 1000)));
             Response.Cookies.Append("fnpackup-token", value, new CookieOptions
             {
-                HttpOnly = true,
-                Secure = true,
+                HttpOnly = false,
+                Secure = false,
                 SameSite = SameSiteMode.Lax,
                 Path = "/"
             });
@@ -644,6 +644,9 @@ namespace fnpackup.Controllers
                 string port = Environment.GetEnvironmentVariable("FNOS_HTTP_PORT") ?? "5666";
 
                 string host = $"http://localhost:{port}/";
+#if DEBUG
+                host = $"http://192.168.1.82:{port}/";
+#endif
                 string token = Request.Cookies["fnos-token"];
 
                 if (string.IsNullOrWhiteSpace(token))
