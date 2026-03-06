@@ -36,6 +36,15 @@ namespace fnpackup.Controllers
         [Route("/system/signin")]
         public async Task<string> SignIn([FromServices] IMemoryCache memoryCache)
         {
+            if (Request.Cookies.TryGetValue("fnpackup-token", out var token)
+               && memoryCache.TryGetValue<string>("fnpackup-token", out var token1))
+            {
+                if (token == token1)
+                {
+                    return "OK";
+                }
+            }
+
             if (Environment.GetEnvironmentVariable("FNOS_HTTP_LOGIN") != "false")
             {
                 string host = "localhost";
@@ -54,7 +63,7 @@ namespace fnpackup.Controllers
             }
 
             string value = Md5(Guid.NewGuid().ToString());
-            memoryCache.Set("fnpackup-token", value, TimeSpan.FromMilliseconds(60 * 1000));
+            memoryCache.Set("fnpackup-token", value, new MemoryCacheEntryOptions().SetSlidingExpiration(TimeSpan.FromMilliseconds(60 * 1000)));
             Response.Cookies.Append("fnpackup-token", value, new CookieOptions
             {
                 HttpOnly = true,

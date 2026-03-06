@@ -41,6 +41,25 @@ export default {
         const route = useRoute();
         const showHead = computed(()=>window.self === window.top);
         const showApp = ref(false);
+
+        const checkSignIn = ()=>{
+            state.img = 'loading.gif';
+            state.checkMsg = '正在登录检查';
+            fetchSystemSignIn().then((res)=>{
+                setTimeout(()=>{
+                    showApp.value = res == 'OK';
+                    state.checkMsg = res == 'OK' ? res : '登录检查失败，可能未登录飞牛';
+                    state.img = res == 'OK' ? 'loading.gif' : 'fail.jpg';
+                },1000);
+                setTimeout(checkSignIn,5000);
+            }).catch(()=>{
+                showApp.value = false;
+                state.checkMsg = '登录检查失败';
+                state.img = 'fail.jpg';
+                setTimeout(checkSignIn,5000);
+            }); 
+        };
+
         router.isReady().then(()=>{
             for(let key in route.query){
                 document.cookie = `${key}=${decodeURIComponent(route.query[key])}; path=/;`;
@@ -49,14 +68,8 @@ export default {
             if(route.query['fnos-theme']){
                 window.location = `/?t=${Date.now()}`;
             }
-            fetchSystemSignIn().then((res)=>{
-                state.checkMsg = res;
-                showApp.value = res == 'OK';
-                state.checkMsg = res == 'OK' ? res : '登录检查失败，可能未登录飞牛';
-                state.img = res == 'OK' ? 'loading.gif' : 'fail.jpg';
-            }).catch(()=>{
-                state.checkMsg = '登录检查失败';
-            });
+            checkSignIn();
+            
         });
 
         return {showHead,showApp,state}
