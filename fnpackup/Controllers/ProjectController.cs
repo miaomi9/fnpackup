@@ -66,19 +66,23 @@ namespace fnpackup.Controllers
         {
             if (Environment.GetEnvironmentVariable("FNOS_HTTP_LOGIN") != "false")
             {
-                string host = "localhost";
-                string port = Environment.GetEnvironmentVariable("FNOS_HTTP_PORT") ?? "5666";
-#if DEBUG
-                host = "192.168.1.82";
-#endif
-                string url = $"http://{host}:{port}/app-center/v1/app/list?language=zh";
-                using HttpClient client = httpClientFactory.CreateClient();
-                client.DefaultRequestHeaders.Add("Authorization", $"trim {Request.Cookies["fnos-token"]}");
-                HttpResponseMessage resp = await client.GetAsync(url);
-                if (resp.StatusCode != System.Net.HttpStatusCode.OK)
+                try
                 {
-                    return false;
+                    string host = "localhost";
+                    string port = Environment.GetEnvironmentVariable("FNOS_HTTP_PORT") ?? "5666";
+#if DEBUG
+                    host = "192.168.1.82";
+#endif
+                    string url = $"http://{host}:{port}/app-center/v1/app/list?language=zh";
+                    using HttpClient client = httpClientFactory.CreateClient();
+                    client.DefaultRequestHeaders.Add("Authorization", $"trim {Request.Cookies["fnos-token"]}");
+                    HttpResponseMessage resp = await client.GetAsync(url);
+                    return resp.StatusCode == System.Net.HttpStatusCode.OK;
                 }
+                catch (Exception)
+                {
+                }
+                return false;
             }
             return true;
         }
