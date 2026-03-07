@@ -50,12 +50,12 @@ export default {
                     fetchSystemVersion().then((_res)=>{
                         showApp.value = true;
                         state.checkMsg =  res ;
-                        state.img = res ==  'loading.gif';
+                        state.img = 'loading.gif';
                     }).catch(()=>{});
                 }else{
                     showApp.value = false;
                     state.checkMsg = '登录检查失败，可能未登录飞牛';
-                    state.img =  'fail.jpg';
+                    state.img = 'fail.jpg';
                 }
                 setTimeout(checkSignIn,5000);
             }).catch(()=>{
