@@ -289,7 +289,7 @@ namespace fnpackup.Controllers
                 }
                 return new string[] { key, value };
 
-            }).ToDictionary(k => k[0].Trim(), v => v.Length > 1 ? v[1].Trim() : string.Empty);
+            }).Where(c => string.IsNullOrWhiteSpace(c[0])==false).ToDictionary(k => k[0].Trim(), v => v.Length > 1 ? v[1].Trim() : string.Empty);
         }
         private async Task WritePlatform(string name, Dictionary<string, string> dic)
         {
