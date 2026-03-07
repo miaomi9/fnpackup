@@ -26,7 +26,7 @@ import Head from './components/Head.vue';
 import Body from './components/Body.vue';
 import { computed, reactive, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { fetchSystemSignIn } from './api/api';
+import { fetchSystemSignIn, fetchSystemVersion } from './api/api';
 export default {
     name: 'App',
     components: {Head,Body},
@@ -46,11 +46,17 @@ export default {
             state.img = 'loading.gif';
             state.checkMsg = '正在登录检查';
             fetchSystemSignIn().then((res)=>{
-                setTimeout(()=>{
-                    showApp.value = res == 'OK';
-                    state.checkMsg = res == 'OK' ? res : '登录检查失败，可能未登录飞牛';
-                    state.img = res == 'OK' ? 'loading.gif' : 'fail.jpg';
-                },1000);
+                if(res == 'OK'){
+                    fetchSystemVersion().then((_res)=>{
+                        showApp.value = true;
+                        state.checkMsg =  res ;
+                        state.img = res ==  'loading.gif';
+                    }).catch(()=>{});
+                }else{
+                    showApp.value = false;
+                    state.checkMsg = '登录检查失败，可能未登录飞牛';
+                    state.img =  'fail.jpg';
+                }
                 setTimeout(checkSignIn,5000);
             }).catch(()=>{
                 showApp.value = false;
