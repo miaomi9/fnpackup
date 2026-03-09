@@ -36,7 +36,9 @@ namespace fnpackup.Controllers
         [Route("/system/signin")]
         public async Task<string> SignIn([FromServices] IMemoryCache memoryCache)
         {
-
+#if DEBUG
+            return "OK";
+#endif
             if (await CheckLogin().ConfigureAwait(false) == false)
             {
                 return string.Empty;
@@ -52,6 +54,7 @@ namespace fnpackup.Controllers
             }
 
             string value = Md5(Guid.NewGuid().ToString());
+            Console.WriteLine(value);
             memoryCache.Set("fnpackup-token", value, new MemoryCacheEntryOptions().SetSlidingExpiration(TimeSpan.FromMilliseconds(60 * 1000)));
             Response.Cookies.Append("fnpackup-token", value, new CookieOptions
             {
@@ -147,7 +150,7 @@ namespace fnpackup.Controllers
         }
         [HttpPost]
         [Route("/project/pack")]
-        public async Task<List<PackResultInfo>> Pack(string name, string platform = "", string server = "app/server")
+        public async Task<List<PackResultInfo>> Pack(string name,string uspace = "", string platform = "", string server = "app/server")
         {
             Dictionary<string, string> manifest = await GetManifest(name).ConfigureAwait(false);
             if (manifest.ContainsKey("platform") == false)
@@ -164,7 +167,7 @@ namespace fnpackup.Controllers
             List<PackResultInfo> result = new List<PackResultInfo>();
             if (string.IsNullOrWhiteSpace(platform))
             {
-                result.Add(PackRename(name, appname, manifest));
+                result.Add(PackRename(name, appname, manifest, uspace));
             }
             else
             {
@@ -177,7 +180,7 @@ namespace fnpackup.Controllers
 
                         CopyPlatform(name, item, server);
 
-                        result.Add(PackRename(name, appname, manifest));
+                        result.Add(PackRename(name, appname, manifest, uspace));
                     }
                     catch (Exception ex)
                     {
@@ -201,7 +204,7 @@ namespace fnpackup.Controllers
             ClearFile(platformDir);
             return DirAreEmpty(platformDir);
         }
-        private PackResultInfo PackRename(string name, string appname, Dictionary<string, string> manifest)
+        private PackResultInfo PackRename(string name, string appname, Dictionary<string, string> manifest, string uspace = "")
         {
             string msg = CommandHelper.Execute($"fnpack", $" build", [], Path.Join(root, name), out string error);
             if (string.IsNullOrWhiteSpace(error) == false)
@@ -214,6 +217,17 @@ namespace fnpackup.Controllers
             }
             string newName = $"{appname}-{manifest["version"]}-{manifest["platform"]}";
             System.IO.File.Move(Path.Join(root, name, $"{appname}.fpk"), Path.Join(root, name, $"{newName}.fpk"), true);
+
+
+            if(uspace == "true" && OperatingSystem.IsLinux())
+            {
+                if(Directory.Exists("/user-space/fnpackup-docker") == false)
+                {
+                    Directory.CreateDirectory("/user-space/fnpackup-docker");
+                }
+                System.IO.File.Copy(Path.Join(root, name, $"{newName}.fpk"), Path.Join("/user-space/fnpackup-docker", $"{newName}.fpk"), true);
+            }
+
             return new PackResultInfo { FileName = $"{newName}.fpk", Msg = msg };
         }
         private void CopyPlatform(string name, string platform, string dist)

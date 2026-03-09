@@ -78,9 +78,9 @@ export const fetchProjectExists = (name) => {
         headers:{'Content-Type':'application/json'},
     }).then(res => res.json());
 }
-export const fetchProjectPack = (name,platform,server) => { 
+export const fetchProjectPack = (name,platform,server,uspace) => { 
     return fetchApi(`/project/pack`,{
-        params:{name:name,platform:platform,server:server},
+        params:{name:name,platform:platform,server:server,uspace:uspace},
         method:'POST',
         headers:{'Content-Type':'application/json'},
     }).then(res => res.json());

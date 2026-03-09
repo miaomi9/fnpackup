@@ -8,11 +8,11 @@
 		<Authors>snltty</Authors>
 		<Company>snltty</Company>
 		<PackageReleaseNotes>fnpackup</PackageReleaseNotes>
-		<Version>1.0.8</Version>
-		<AssemblyVersion>1.0.8</AssemblyVersion>
-		<FileVersion>1.0.8</FileVersion>
+		<Version>1.0.9</Version>
+		<AssemblyVersion>1.0.9</AssemblyVersion>
+		<FileVersion>1.0.9</FileVersion>
 		<Description>1. 一些累计更新，写了一些新bug
-2. 加入可选登录限制，是否必须登录飞牛才能打开应用</Description>
+2. 打包后放入用户空间</Description>
 		<Copyright>snltty</Copyright>
 		<JsonSerializerIsReflectionEnabledByDefault>true</JsonSerializerIsReflectionEnabledByDefault>
 		<ApplicationIcon>ico.ico</ApplicationIcon>

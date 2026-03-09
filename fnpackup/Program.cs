@@ -90,6 +90,10 @@ namespace fnpackup
 
         public async Task InvokeAsync(HttpContext context)
         {
+#if DEBUG
+            await next(context);
+            return;
+#endif
             if (context.Request.Path == "/system/signin")
             {
                 await next(context);

@@ -42,6 +42,7 @@
                     <el-button plain type="primary" @click="handleBuild" :loading="state.loading">开始打包</el-button>
                     <span class="flex-1"></span>
                     <el-checkbox label="打包后下载" v-model="state.download" />
+                    <el-checkbox label="放到用户空间" v-model="state.uspace" />
                 </div>
             </el-descriptions-item>
         </el-descriptions>
@@ -71,6 +72,7 @@ export default {
             platformNames:[],
             platforms:[],
             download:false,
+            uspace:false,
             server:'app/server/'
         });
 
@@ -121,7 +123,7 @@ export default {
             }
             state.loading = true;
             logger.value.debug('开始打包...');
-            fetchProjectPack(name,state.platform ? state.platforms.join(','):'',state.server)
+            fetchProjectPack(name,state.platform ? state.platforms.join(','):'',state.server,`${state.uspace}`)
             .then(async (res)=>{
                 res.forEach(c=>{
                     if(c.msg.indexOf('Packing successfully')>=0){
