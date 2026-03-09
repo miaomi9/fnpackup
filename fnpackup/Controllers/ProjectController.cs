@@ -221,11 +221,12 @@ namespace fnpackup.Controllers
 
             if(uspace == "true" && OperatingSystem.IsLinux())
             {
-                if(Directory.Exists("/user-space/fnpackup-docker") == false)
+                string userSpace = "/user-space/fnpackup-docker";
+                if (Directory.Exists(userSpace) == false)
                 {
-                    Directory.CreateDirectory("/user-space/fnpackup-docker");
+                    Directory.CreateDirectory(userSpace);
                 }
-                System.IO.File.Copy(Path.Join(root, name, $"{newName}.fpk"), Path.Join("/user-space/fnpackup-docker", $"{newName}.fpk"), true);
+                System.IO.File.Copy(Path.Join(root, name, $"{newName}.fpk"), Path.Join(userSpace, $"{newName}.fpk"), true);
             }
 
             return new PackResultInfo { FileName = $"{newName}.fpk", Msg = msg };

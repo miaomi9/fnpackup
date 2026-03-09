@@ -96,6 +96,7 @@ export default {
                         state.platform = res.platform || false;
                         state.server = res.server || 'app/server/';
                         state.download = res.download  || false;
+                        state.uspace = res.uspace  || false;
                         state.platforms = res.platforms || [];
                     }
                     resolve();
@@ -110,6 +111,7 @@ export default {
                 platform:state.platform || false,
                 server:state.server || 'app/server/',
                 download:state.download || false,
+                uspace:state.uspace || false,
                 platforms:state.platforms || []
             },null,2)).then(()=>{}).catch(()=>{});
         }
