@@ -66,7 +66,7 @@
         }
 
         const href = window.location.href;
-        const _href = sessionStorage.getItem('fnos-fnpackup-proxy-url');
+        const _href = localStorage.getItem('fnos-fnpackup-proxy-url');
         const _port = localStorage.getItem('fnos-fnpackup-proxy-port');
         if(href == _href && _port){
             jumpFn(_port);
@@ -78,8 +78,8 @@
             if(!port) {
                 return;
             }
-            sessionStorage.setItem('fnos-fnpackup-proxy-port',port);
-            sessionStorage.setItem('fnos-fnpackup-proxy-url',window.location.href);
+            localStorage.setItem('fnos-fnpackup-proxy-port',port);
+            localStorage.setItem('fnos-fnpackup-proxy-url',window.location.href);
             jumpFn(port);
         }
         
