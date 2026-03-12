@@ -92,6 +92,10 @@ echo "debug and error msg" > /${TRIM_APPDEST_VOL}/fnpackup.debug 2>&1
 
 若此项目对您有用，可以考虑对作者稍加支持，让作者更有动力，在项目上投入更多时间和精力。
 
+<a href="https://dpanel.cc" target="_blank"><img src="https://cdn.w7.cc/dpanel/dpanel-logo.png"  height="50"></a>
+
+
+
 **或花费￥30/次让作者帮忙打包fpk，可获得打包过程录屏**
 
 ![pay](./fnpackup.web/public/pay.png)
