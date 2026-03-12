@@ -44,6 +44,14 @@
             <p>
                 <img src="pay.png" alt="pay" width="100%"/>
             </p>
+            <div class="pay-list flex">
+                <a v-for="item in state.pays" :key="item.id" :href="item.Url" target="_blank">
+                    <dl class="t-c">
+                        <dt><img :src="item.Logo" alt="" width="100"></dt>
+                        <dd>{{item.Name}}</dd>
+                    </dl>
+                </a>
+            </div>
         </div>
     </el-dialog>
 </template>
@@ -62,7 +70,8 @@ export default {
         const state = reactive({
             theme: '',
             version: 'v0.0.0',
-            showPay:false
+            showPay:false,
+            pays:[]
         });
         const changeTheme = (theme)=>{
             state.theme = theme;
@@ -76,6 +85,9 @@ export default {
         }
         const handlePay = ()=>{
             state.showPay = true;
+            return fetch('https://fnpackup.snltty.com/afdian.json?timestamp='+Date.now()).then(c=>c.json()).then((res)=>{
+                state.pays = res;
+            });
         }
 
         onMounted(()=>{
@@ -156,6 +168,28 @@ ul{
             height:2.6rem;
 
             &+span{font-size:1.5rem;color:green;}
+        }
+    }
+}
+.pay{
+    .pay-list{
+        padding-left:1px;
+        margin-right:-3px;
+        a{
+            border:1px solid #ddd;
+            margin-top:-1px;
+            margin-left:-1px;
+            width:33.3333333333333%;
+            box-sizing: border-box;
+            padding:.5rem;
+
+            dl{
+                dt{
+                    img{
+                        width:100%;
+                    }
+                }
+            }
         }
     }
 }
