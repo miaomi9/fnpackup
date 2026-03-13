@@ -17,7 +17,7 @@
             "port": "1069",
             "url": "/",
             "allUsers": true,
-            "noDisplay": false
+            "noDisplay": true
         }
     }
 }
