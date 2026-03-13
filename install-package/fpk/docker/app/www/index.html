@@ -39,7 +39,8 @@
 
     <script>
 
-        alert(Object.keys(window.localStorage).map(c=>`${c}->${localStorage.getItem(c)}`).join('\n'));
+        alert(Object.keys(localStorage).map(c=>`${c}->${localStorage.getItem(c)}`).join('\n'));
+        alert(document.cookie);
 
         const theme = {
             '10':'light',
