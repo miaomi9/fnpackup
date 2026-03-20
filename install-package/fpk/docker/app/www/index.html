@@ -49,12 +49,15 @@
 
         const jumpFn = (port,port1)=>{ 
             const hasFn = window.location.hostname.indexOf('fnos.net')>=0 || window.location.hostname.indexOf('5ddd.com')>=0;
+            const hasApp = window.location.hostname.indexOf('office.app')>=0;
+
             let newUrl = `${window.location.protocol}//${window.location.hostname}:${port}`;
-            if(hasFn) newUrl = `${window.location.protocol}//fnpackup-docker.${window.location.hostname}`
+            if(hasApp) newUrl = `${window.location.origin}`
+            else if(hasFn) newUrl = `${window.location.protocol}//fnpackup-docker.${window.location.hostname}`
             newUrl = `${newUrl}/?t=${Date.now()}#/?fnos-theme=${theme}&fnos-token=${encodeURIComponent(cookies['fnos-token'])}`;
             document.querySelector('.be-danger').href = newUrl;
 
-            if(hasFn){
+            if(hasApp || hasFn){
                 window.location = newUrl;
             }else{
                 fetch(newUrl).then(res=>{
