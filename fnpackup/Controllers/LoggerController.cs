@@ -110,26 +110,34 @@ namespace fnpackup.Controllers
             {
                 return;
             }
+            string root = "/var/apps/fnpackup/shares/fnpackup-docker/logs/";
+            if(Directory.Exists(root) == false)
+            {
+                try
+                {
+                    Directory.CreateDirectory(root);
+                }
+                catch (Exception)
+                {
+                }
+            }
             foreach (var file in files)
             {
                 string path = $"/var/apps/fnpackup/shares/fnpackup-docker/logs/{file.Name}";
-                string root = "/var/apps/fnpackup/shares/fnpackup-docker/logs/";
                 try
                 {
                     File.Delete(path);
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-                    Console.WriteLine(ex);
                 }
                 try
                 {
                     CommandHelper.Execute("/bin/bash", $"-c \"mkfifo '{path}' ; chmod 666 '{path}'\"", [], root, out string error, false);
                     ReadLoggerAsync(path, file.Type);
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-                    Console.WriteLine(ex);
                 }
             }
         }

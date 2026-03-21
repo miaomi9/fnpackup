@@ -4,7 +4,7 @@ mkdir -p public/publish-fpk/docker
 cp -rf install-package/fpk/docker/* public/publish-fpk/docker
 
 sed -i "s|{version}|1.1.1|g" public/publish-fpk/docker/manifest
-sed -i "s|{changelog}|1. cgi代理测试，请使用1.1.0|g" public/publish-fpk/docker/manifest
+sed -i "s|{changelog}|1. 使用CGI直接代理webapi|g" public/publish-fpk/docker/manifest
 sed -i "s|{version}|v1.1.1|g" public/publish-fpk/docker/app/docker/docker-compose.yaml
 sed -i 's/\r$//' public/publish-fpk/docker/manifest
 sed -i 's/\r$//' public/publish-fpk/docker/cmd/main

@@ -11,7 +11,7 @@
 		<Version>1.1.1</Version>
 		<AssemblyVersion>1.1.1</AssemblyVersion>
 		<FileVersion>1.1.1</FileVersion>
-		<Description>1. cgi代理测试，请使用1.1.0</Description>
+		<Description>1. 使用CGI直接代理webapi</Description>
 		<Copyright>snltty</Copyright>
 		<JsonSerializerIsReflectionEnabledByDefault>true</JsonSerializerIsReflectionEnabledByDefault>
 		<ApplicationIcon>ico.ico</ApplicationIcon>

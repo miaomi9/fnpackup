@@ -19,7 +19,7 @@ jobs:
           release_name: v1.1.1.${{ steps.date.outputs.today }}
           draft: false
           prerelease: false
-          body: 1. cgi代理测试，请使用1.1.0
+          body: 1. 使用CGI直接代理webapi
       - name: setup node.js
         uses: actions/setup-node@v2
         with:
