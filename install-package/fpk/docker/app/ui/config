@@ -1,6 +1,5 @@
 {
     ".url": {
-        "fnpackup.cgi.Application": {
         "fnpackup.proxy.Application": {
             "title": "在线fpk",
             "icon": "images/icon_{0}.png",
