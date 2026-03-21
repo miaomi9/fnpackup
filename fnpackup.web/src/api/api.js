@@ -1,7 +1,7 @@
 const BASE_URL = process.env.NODE_ENV === 'development' ? `http://localhost:1069` : '';
 export const fetchApi = (url,options = {}) => {
     let uri = window.location.href.indexOf('proxy.cgi')>=0 
-    ? `/cgi/ThirdParty/fnpackup/proxy.cgi/?path=${url}&1=1`
+    ? `/cgi/ThirdParty/fnpackup/proxy.cgi${url}?1=1`
     : BASE_URL + url + '?1=1';
     if(options.params){
         uri += '&' + Object.keys(options.params).map(key => `${key}=${options.params[key]}`).join('&');
@@ -11,7 +11,7 @@ export const fetchApi = (url,options = {}) => {
 }
 export const xhrApi = (url,params,data,progressFn) => {
     let uri = window.location.href.indexOf('proxy.cgi')>=0 
-    ? `/cgi/ThirdParty/fnpackup/proxy.cgi/?path=${url}&1=1`
+    ? `/cgi/ThirdParty/fnpackup/proxy.cgi${url}?1=1`
     : BASE_URL + url + '?1=1';
     if(params){
         uri += '&' + Object.keys(params).map(key => `${key}=${params[key]}`).join('&');

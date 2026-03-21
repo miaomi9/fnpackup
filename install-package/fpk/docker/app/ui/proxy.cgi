@@ -1,58 +1,51 @@
-#!/bin/sh
+#!/bin/bash
 
-# 不要输出任何Content-Type，让curl的响应直接输出
-
-# 获取请求方法
-REQUEST_METHOD=${REQUEST_METHOD:-GET}
-CONTENT_TYPE=${CONTENT_TYPE:-}
-
-# 读取POST数据
-if [ "$REQUEST_METHOD" = "POST" ]; then
-    read -r POST_DATA
-    QUERY_STRING="$POST_DATA"
-fi
-
-# 解析参数（同之前）
-IFS='&' 
-set -f
-for pair in $QUERY_STRING; do
-    key="${pair%%=*}"
-    value="${pair#*=}"
-    value=$(echo "$value" | sed 's/+/ /g; s/%/\\x/g' | xargs -0 printf "%b" 2>/dev/null)
-    eval "param_$key='$value'"
+if [[ "$REQUEST_URI" == *"proxy.cgi"* ]]; then
+    after_proxy="${REQUEST_URI#*proxy.cgi}"
+    echo "[$(date)] After proxy.cgi: $after_proxy" >> /tmp/proxy_cgi_error.log
     
-    if [ "$key" != "path" ]; then
-        other_params="$other_params&$key=$value"
+    if [[ "$after_proxy" == *"?"* ]]; then
+        target_path=$(echo "$after_proxy" | cut -d'?' -f1)
+        target_query=$(echo "$after_proxy" | cut -d'?' -f2-)
+    else
+        target_path="$after_proxy"
+        target_query=""
     fi
-done
-set +f
-unset IFS
-
-# 获取path参数
-path_param=$(echo "$param_path" | sed 's|^/||')
-
-# 构建目标URL
-if [ -n "$path_param" ]; then
-    target_url="http://localhost:1069/$path_param"
 else
-    target_url="http://localhost:1069/"
+    after_proxy=""
+    target_path=""
+    target_query="$QUERY_STRING"
 fi
 
-if [ -n "$other_params" ]; then
-    other_params="${other_params#&}"
-    target_url="$target_url?$other_params"
+if [ -z "$target_path" ]; then
+    target_path="/"
 fi
 
-# 直接转发，不添加额外输出
-case "$REQUEST_METHOD" in
-    POST)
-        if [ -n "$CONTENT_TYPE" ]; then
-            curl -s -X POST "$target_url" --data "$POST_DATA" -H "Content-Type: $CONTENT_TYPE"
-        else
-            curl -s -X POST "$target_url" --data "$POST_DATA"
-        fi
-        ;;
-    GET|*)
-        curl -s -X GET "$target_url"
-        ;;
-esac
+target_url="http://localhost:1069$target_path"
+if [ -n "$target_query" ]; then
+    target_url="$target_url?$target_query"
+fi
+
+POST_DATA=""
+if [ "$REQUEST_METHOD" = "POST" ]; then
+    POST_DATA=$(cat)
+    echo "[$(date)] POST data length: ${#POST_DATA}" >> /tmp/proxy_cgi_error.log
+fi
+
+curl_args=(-s -i -X "$REQUEST_METHOD")
+
+if [ -n "$HTTP_COOKIE" ]; then
+    curl_args+=(-H "Cookie: $HTTP_COOKIE")
+fi
+
+if [ -n "$CONTENT_TYPE" ]; then
+    curl_args+=(-H "Content-Type: $CONTENT_TYPE")
+fi
+
+if [ "$REQUEST_METHOD" = "POST" ] && [ -n "$POST_DATA" ]; then
+    curl_args+=(--data-binary "$POST_DATA")
+fi
+
+curl_args+=("$target_url")
+
+exec curl "${curl_args[@]}"
