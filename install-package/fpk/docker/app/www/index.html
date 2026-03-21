@@ -49,7 +49,7 @@
 
         const jumpFn = (port,port1)=>{ 
             const hasFn = window.location.hostname.indexOf('fnos.net')>=0 || window.location.hostname.indexOf('5ddd.com')>=0;
-            const hasApp = window.location.hostname.indexOf('office.app')>=0;
+            const hasApp = false;// window.location.hostname.indexOf('office.app')>=0;
 
             let newUrl = `${window.location.protocol}//${window.location.hostname}:${port}`;
             if(hasApp) newUrl = `${window.location.origin}`
