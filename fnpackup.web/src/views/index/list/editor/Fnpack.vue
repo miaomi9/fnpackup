@@ -79,6 +79,8 @@ export default {
         const download = (projectName,name)=>{
             let href = process.env.NODE_ENV === 'development' 
             ? `http://localhost:1069/file/download?path=./${projectName}/${name}`
+            :  window.location.href.indexOf('proxy.cgi')>=0 
+            ? `/cgi/ThirdParty/fnpackup/proxy.cgi/file/download?path=./${projectName}/${name}`
             : `/file/download?path=./${projectName}/${name}`;
             const a = document.createElement('a');
             a.target='_blank';

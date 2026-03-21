@@ -15,6 +15,3 @@ services:
       - "/var/apps:/app/apps"
       - "/${TRIM_APPDEST_VOL}:/${TRIM_APPDEST_VOL}"
       - "/${TRIM_APPDEST_VOL}/1000:/user-space"
-    environment:
-      - FNOS_HTTP_PORT=${wizard_fnos_http_port}
-      - FNOS_HTTP_LOGIN=${wizard_fnos_http_login}

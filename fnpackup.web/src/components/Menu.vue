@@ -13,8 +13,6 @@
             </template>
         </ul>
         <div class="foot-wrap">
-            <a href="javascript:;" @click="changeTheme('light')" v-if="state.theme == 'dark'"><el-icon size="18"><Moon /></el-icon></a>
-            <a href="javascript:;" @click="changeTheme('dark')" v-else><el-icon size="18"><Sunny /></el-icon></a>
             <a href="javascript:;" @click="handlePay">
                 <img src="../assets/money.svg" class="img-big">
                 <span>慷慨赞助</span>
@@ -68,20 +66,18 @@ export default {
         const options = computed(()=>router.options.routes);
   
         const state = reactive({
-            theme: '',
             version: 'v0.0.0',
             showPay:false,
             pays:[]
         });
-        const changeTheme = (theme)=>{
-            state.theme = theme;
-            localStorage.setItem('fnos-theme', theme);
-            setTheme();
-        }
         const setTheme = ()=>{
-             const isSystemDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
-            state.theme = localStorage.getItem('fnos-theme') || (isSystemDarkMode?'dark':'light')
-            document.querySelector('html').setAttribute('class', state.theme);
+            const isSystemDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const theme =  {
+                '10':'light',
+                '20':'dark',
+                '30':isSystemDarkMode ? 'dark':'light'
+            }[localStorage.getItem('fnos-theme-mode') || '30'];
+            document.querySelector('html').setAttribute('class',theme);
         }
         const handlePay = ()=>{
             state.showPay = true;
@@ -97,7 +93,7 @@ export default {
             setTheme();
         })
 
-        return {options,state,changeTheme,handlePay}
+        return {options,state,handlePay}
     }
 }
 </script>

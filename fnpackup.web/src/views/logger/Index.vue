@@ -41,18 +41,18 @@
             <h3>日志管道</h3>
             <p>在安装空间下</p>
             <ul>
-                <li>调试: /${TRIM_APPDEST_VOL}/fnpackup.debug</li>
-                <li>信息: /${TRIM_APPDEST_VOL}/fnpackup.info</li>
-                <li>警告: /${TRIM_APPDEST_VOL}/fnpackup.warning</li>
-                <li>错误: /${TRIM_APPDEST_VOL}/fnpackup.error</li>
-                <li>致命: /${TRIM_APPDEST_VOL}/fnpackup.fatal</li>
+                <li>调试: /var/apps/fnpackup/shares/fnpackup-docker/logs/debug.log</li>
+                <li>信息: /var/apps/fnpackup/shares/fnpackup-docker/logs/info.log</li>
+                <li>警告: /var/apps/fnpackup/shares/fnpackup-docker/logs/warning.log</li>
+                <li>错误: /var/apps/fnpackup/shares/fnpackup-docker/logs/error.log</li>
+                <li>致命: /var/apps/fnpackup/shares/fnpackup-docker/logs/fatal.log</li>
             </ul>
             <h3>写入示例</h3>
             <ul>
-                <li>标准: command > /${TRIM_APPDEST_VOL}/fnpackup.debug</li>
-                <li>标准: command 1> /${TRIM_APPDEST_VOL}/fnpackup.debug</li>
-                <li>错误: command 2> /${TRIM_APPDEST_VOL}/fnpackup.error</li>
-                <li>标准+错误: command > /${TRIM_APPDEST_VOL}/fnpackup.error 2>&1</li>
+                <li>标准: command > /var/apps/fnpackup/shares/fnpackup-docker/logs/debug.log</li>
+                <li>标准: command 1> /var/apps/fnpackup/shares/fnpackup-docker/logs/debug.log</li>
+                <li>错误: command 2> /var/apps/fnpackup/shares/fnpackup-docker/logs/error.log</li>
+                <li>标准+错误: command > /var/apps/fnpackup/shares/fnpackup-docker/logs/error.log 2>&1</li>
             </ul>
         </div>
     </el-dialog>

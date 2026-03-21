@@ -95,7 +95,9 @@ export default {
         const handleDownload = ()=>{
             let href = process.env.NODE_ENV === 'development' 
             ? `http://localhost:1069/file/download?path=${projects.value.page.path}`
-            : `/file/download?path=${projects.value.page.path}`;
+            :  window.location.href.indexOf('proxy.cgi')>=0 
+            ? `/cgi/ThirdParty/fnpackup/proxy.cgi/file/download?path=${projects.value.page.path}`
+            :`/file/download?path=${projects.value.page.path}`;
             if(projects.value.contextMenu.row){
                 href = `${href}/${projects.value.contextMenu.row.name}`;
             }

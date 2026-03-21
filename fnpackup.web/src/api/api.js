@@ -60,12 +60,6 @@ export const fetchSystemVersion = () => {
         headers:{'Content-Type':'application/json'}
     }).then(c=>c.text());
 }
-export const fetchSystemSignIn = ()=>{
-    return fetchApi('/system/signin',{
-        method:'GET',
-        headers:{'Content-Type':'application/json'},
-    }).then(res => res.text());
-}
 
 
 export const fetchProjectCreate = (data) => { 
@@ -189,8 +183,6 @@ export const fetchStaticSearch = () => {
         headers:{'Content-Type':'application/json'},
     });
 }
-
-
 
 export const fetchLoggerList = (text,p = 1,ps = 10,type = 0) => { 
     return fetchApi('/logger/list',{

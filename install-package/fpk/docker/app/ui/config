@@ -10,14 +10,13 @@
             "allUsers": true
         },
         "fnpackup.proxy.Application": {
-            "title": "在线fpk",
+            "title": "在线fpk1",
             "icon": "images/icon_{0}.png",
             "type": "iframe",
             "protocol": "http",
             "port": "",
             "url": "/cgi/ThirdParty/fnpackup/proxy.cgi/",
-            "allUsers": true,
-            "noDisplay": true
+            "allUsers": true
         },
         "fnpackup.docker.Application": {
             "title": "在线fpk",

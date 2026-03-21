@@ -21,11 +21,11 @@ namespace fnpackup.Controllers
     public sealed class LoggerTransfer
     {
         private readonly List<LoggerFileInfo> files = [
-            new LoggerFileInfo { Name = "fnpackup.debug", Type = LoggerType.Debug },
-            new LoggerFileInfo { Name = "fnpackup.info", Type = LoggerType.Info },
-            new LoggerFileInfo { Name = "fnpackup.warning", Type = LoggerType.Warning },
-            new LoggerFileInfo { Name = "fnpackup.error", Type = LoggerType.Error },
-            new LoggerFileInfo { Name = "fnpackup.fatal", Type = LoggerType.Fatal },
+            new LoggerFileInfo { Name = "debug.log", Type = LoggerType.Debug },
+            new LoggerFileInfo { Name = "info.log", Type = LoggerType.Info },
+            new LoggerFileInfo { Name = "warning.log", Type = LoggerType.Warning },
+            new LoggerFileInfo { Name = "error.log", Type = LoggerType.Error },
+            new LoggerFileInfo { Name = "fatal.log", Type = LoggerType.Fatal },
         ];
         private readonly List<LoggerInfo> list = [];
         private string vol = string.Empty;
@@ -35,6 +35,7 @@ namespace fnpackup.Controllers
         {
             if (OperatingSystem.IsLinux())
             {
+                DeleteLogger();
                 InitLogger();
                 CreateLogger();
                 AppDomain.CurrentDomain.ProcessExit += (sender, e) => DeleteLogger();
@@ -94,6 +95,13 @@ namespace fnpackup.Controllers
                 catch (Exception)
                 {
                 }
+                try
+                {
+                    File.Delete(Path.Combine("/var/apps/fnpackup/shares/fnpackup-docker/logs/", file.Name));
+                }
+                catch (Exception)
+                {
+                }
             }
         }
         private void CreateLogger()
@@ -104,7 +112,8 @@ namespace fnpackup.Controllers
             }
             foreach (var file in files)
             {
-                string path = $"/{vol}/{file.Name}";
+                string path = $"/var/apps/fnpackup/shares/fnpackup-docker/logs/{file.Name}";
+                string root = "/var/apps/fnpackup/shares/fnpackup-docker/logs/";
                 try
                 {
                     File.Delete(path);
@@ -115,7 +124,7 @@ namespace fnpackup.Controllers
                 }
                 try
                 {
-                    CommandHelper.Execute("/bin/bash", $"-c \"mkfifo '{path}' ; chmod 666 '{path}'\"", [], $"/{vol}", out string error, false);
+                    CommandHelper.Execute("/bin/bash", $"-c \"mkfifo '{path}' ; chmod 666 '{path}'\"", [], root, out string error, false);
                     ReadLoggerAsync(path, file.Type);
                 }
                 catch (Exception ex)

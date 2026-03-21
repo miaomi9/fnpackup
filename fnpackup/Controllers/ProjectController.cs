@@ -1,11 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Caching.Memory;
 using System.IO.Compression;
 using System.Reflection;
-using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
-using System.Xml.Linq;
 
 namespace fnpackup.Controllers
 {
@@ -31,74 +28,6 @@ namespace fnpackup.Controllers
             return $"v{string.Join(".", Assembly.GetExecutingAssembly().GetName().Version.ToString().Split('.').Take(3))}";
         }
 
-
-        [HttpGet]
-        [Route("/system/signin")]
-        public async Task<string> SignIn([FromServices] IMemoryCache memoryCache)
-        {
-#if DEBUG
-            return "OK";
-#endif
-            if (await CheckLogin().ConfigureAwait(false) == false)
-            {
-                return string.Empty;
-            }
-
-            if (Request.Cookies.TryGetValue("fnpackup-token", out var token)
-               && memoryCache.TryGetValue<string>("fnpackup-token", out var token1))
-            {
-                if (token == token1)
-                {
-                    return "OK";
-                }
-            }
-
-            string value = Md5(Guid.NewGuid().ToString());
-            Console.WriteLine(value);
-            memoryCache.Set("fnpackup-token", value, new MemoryCacheEntryOptions().SetSlidingExpiration(TimeSpan.FromMilliseconds(60 * 1000)));
-            Response.Cookies.Append("fnpackup-token", value, new CookieOptions
-            {
-                HttpOnly = false,
-                Secure = false,
-                SameSite = SameSiteMode.Lax,
-                Path = "/"
-            });
-            return "OK";
-        }
-        private async Task<bool> CheckLogin()
-        {
-            if (Environment.GetEnvironmentVariable("FNOS_HTTP_LOGIN") == "true")
-            {
-                try
-                {
-                    string host = "localhost";
-                    string port = Environment.GetEnvironmentVariable("FNOS_HTTP_PORT") ?? "5666";
-#if DEBUG
-                    host = "192.168.1.82";
-#endif
-                    string url = $"http://{host}:{port}/app-center/v1/app/list?language=zh";
-                    using HttpClient client = httpClientFactory.CreateClient();
-                    client.DefaultRequestHeaders.Add("Authorization", $"trim {Request.Cookies["fnos-token"]}");
-                    HttpResponseMessage resp = await client.GetAsync(url);
-                    return resp.StatusCode == System.Net.HttpStatusCode.OK;
-                }
-                catch (Exception)
-                {
-                }
-                return false;
-            }
-            return true;
-        }
-        private string Md5(string input)
-        {
-            byte[] data = MD5.HashData(Encoding.Default.GetBytes(input));
-            StringBuilder sBuilder = new();
-            for (int i = 0; i < data.Length; i++)
-            {
-                sBuilder.Append(data[i].ToString("x2"));
-            }
-            return sBuilder.ToString();
-        }
 
 
         [HttpPost]
@@ -669,11 +598,9 @@ namespace fnpackup.Controllers
         {
             try
             {
-                string port = Environment.GetEnvironmentVariable("FNOS_HTTP_PORT") ?? "5666";
-
-                string host = $"http://localhost:{port}/";
+                string host =  $"{Request.Scheme}://{Request.Host}";;
 #if DEBUG
-                host = $"http://192.168.1.82:{port}/";
+                host = $"http://192.168.1.82:5666/";
 #endif
                 string token = Request.Cookies["fnos-token"];
 
