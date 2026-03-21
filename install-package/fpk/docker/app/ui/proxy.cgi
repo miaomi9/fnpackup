@@ -27,30 +27,15 @@ fi
 
 # 创建临时文件
 temp_file=$(mktemp)
-trap "rm -f '$temp_file'" EXIT
-
+curl_output=$(mktemp)
 # 读取POST数据到临时文件
 if [ "$REQUEST_METHOD" = "POST" ]; then
-    # 使用cat读取并立即写入临时文件
-    if ! cat > "$temp_file"; then
-        echo "Status: 500 Internal Server Error"
-        echo "Content-Type: text/plain"
-        echo
-        echo "Failed to read POST data"
-        exit 1
-    fi
-    
-    # 检查是否为空
-    if [ ! -s "$temp_file" ]; then
-        echo "Status: 400 Bad Request"
-        echo "Content-Type: text/plain"
-        echo
-        echo "Empty POST data"
-        exit 1
-    fi
+    cat > "$temp_file";
 fi
+trap "rm -f '$temp_file'" EXIT
+trap "rm -f '$curl_output'" EXIT
 
-curl_args=(-s -i -X "$REQUEST_METHOD")
+curl_args=(-s -D "$curl_output" -X "$REQUEST_METHOD")
 
 if [ -n "$HTTP_COOKIE" ]; then
     curl_args+=(-H "Cookie: $HTTP_COOKIE")
@@ -67,4 +52,7 @@ fi
 
 curl_args+=("$target_url")
 
-exec curl "${curl_args[@]}"
+curl "${curl_args[@]}"
+
+cat "$curl_output"
+exit 0
