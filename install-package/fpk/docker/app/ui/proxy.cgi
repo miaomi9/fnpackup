@@ -38,7 +38,7 @@ fi
 curl_args+=("$target_url")
 
 if [ "$REQUEST_METHOD" = "POST" ]; then
-    exec cat | curl "${curl_args[@]}" --data-binary @- --include | sed -e '/^HTTP\/1.1 100/,/^$/d' | tee -a "/tmp/proxy.log"
+    exec cat | curl "${curl_args[@]}" --data-binary @- --include |  awk 'BEGIN{skip=0} /^HTTP\/1.1 100/ {skip=1} /^$/ {if(skip==1){skip=0; next}} !skip' | tee -a "/tmp/proxy.log"
 else
-    exec curl "${curl_args[@]}" --include | sed -e '/^HTTP\/1.1 100/,/^$/d'
+    exec curl "${curl_args[@]}" --include |  awk 'BEGIN{skip=0} /^HTTP\/1.1 100/ {skip=1} /^$/ {if(skip==1){skip=0; next}} !skip'
 fi
