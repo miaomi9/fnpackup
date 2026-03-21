@@ -598,7 +598,7 @@ namespace fnpackup.Controllers
         {
             try
             {
-                string host =  $"{Request.Scheme}://{Request.Host}";;
+                string host =  $"{Request.Scheme}://localhost:{Environment.GetEnvironmentVariable("FNOS_HTTP_PORT")}/";
 #if DEBUG
                 host = $"http://192.168.1.82:5666/";
 #endif

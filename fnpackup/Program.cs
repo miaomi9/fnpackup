@@ -72,46 +72,7 @@ namespace fnpackup
             app.UseDynamicStaticFile();
             app.UseLogger();
 
-            app.UseMiddleware<CookieAuthMiddleware>();
-
             app.Run();
-        }
-    }
-
-    public class CookieAuthMiddleware
-    {
-        private readonly RequestDelegate next;
-        private readonly IMemoryCache memoryCache;
-        public CookieAuthMiddleware(RequestDelegate next, IMemoryCache memoryCache)
-        {
-            this.next = next;
-            this.memoryCache = memoryCache;
-        }
-
-        public async Task InvokeAsync(HttpContext context)
-        {
-#if DEBUG
-            await next(context);
-            return;
-#endif
-            if (context.Request.Path == "/system/signin")
-            {
-                await next(context);
-                return;
-            }
-
-            if (context.Request.Cookies.TryGetValue("fnpackup-token", out var token)
-                && memoryCache.TryGetValue<string>("fnpackup-token", out var token1))
-            {
-                if (token == token1)
-                {
-                    await next(context);
-                    return;
-                }
-            }
-
-            context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-            await context.Response.WriteAsync("Invalid token");
         }
     }
 
