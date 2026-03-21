@@ -27,15 +27,13 @@ fi
 
 # 创建临时文件
 temp_file=$(mktemp)
-curl_headers=$(mktemp)
-curl_body=$(mktemp)
 # 读取POST数据到临时文件
 if [ "$REQUEST_METHOD" = "POST" ]; then
     cat > "$temp_file";
 fi
-trap "rm -f '$temp_file' '$curl_headers' '$curl_body'" EXIT
+trap "rm -f '$temp_file'" EXIT
 
-curl_args=(-s -D "$curl_headers" -o "$curl_body" -X "$REQUEST_METHOD")
+curl_args=(-s --include -X "$REQUEST_METHOD")
 
 if [ -n "$HTTP_COOKIE" ]; then
     curl_args+=(-H "Cookie: $HTTP_COOKIE")
@@ -52,11 +50,4 @@ fi
 
 curl_args+=("$target_url")
 
-curl "${curl_args[@]}"
-curl_exit=$?
-
-cat "$curl_headers"
-echo ""  # 确保空行
-cat "$curl_body"
-
-exit 0
+exec curl "${curl_args[@]}"
