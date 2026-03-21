@@ -26,12 +26,12 @@ if [ -n "$target_query" ]; then
 fi
 
 # 创建临时文件
-temp_file=$(mktemp)
+#temp_file=$(mktemp)
 # 读取POST数据到临时文件
-if [ "$REQUEST_METHOD" = "POST" ]; then
-    cat > "$temp_file";
-fi
-trap "rm -f '$temp_file'" EXIT
+#if [ "$REQUEST_METHOD" = "POST" ]; then
+#    cat > "$temp_file";
+#fi
+#trap "rm -f '$temp_file'" EXIT
 
 curl_args=(-s --include -X "$REQUEST_METHOD")
 
@@ -44,10 +44,17 @@ if [ -n "$CONTENT_TYPE" ]; then
 fi
 
 # 使用临时文件传递数据
-if [ "$REQUEST_METHOD" = "POST" ] && [ -s "$temp_file" ]; then
-    curl_args+=(--data-binary "@$temp_file")
-fi
+#if [ "$REQUEST_METHOD" = "POST" ] && [ -s "$temp_file" ]; then
+#    curl_args+=(--data-binary "@$temp_file")
+#fi
 
 curl_args+=("$target_url")
 
-exec curl "${curl_args[@]}"
+if [ "$REQUEST_METHOD" = "POST" ]; then
+    # 直接从stdin读取并传递给curl
+    exec cat | curl "${curl_args[@]}" --data-binary @-
+else
+    exec curl "${curl_args[@]}"
+fi
+
+# exec curl "${curl_args[@]}"
