@@ -31,7 +31,23 @@ trap "rm -f '$temp_file'" EXIT
 
 # 读取POST数据到临时文件
 if [ "$REQUEST_METHOD" = "POST" ]; then
-    cat > "$temp_file"
+    # 使用cat读取并立即写入临时文件
+    if ! cat > "$temp_file"; then
+        echo "Status: 500 Internal Server Error"
+        echo "Content-Type: text/plain"
+        echo
+        echo "Failed to read POST data"
+        exit 1
+    fi
+    
+    # 检查是否为空
+    if [ ! -s "$temp_file" ]; then
+        echo "Status: 400 Bad Request"
+        echo "Content-Type: text/plain"
+        echo
+        echo "Empty POST data"
+        exit 1
+    fi
 fi
 
 curl_args=(-s -i -X "$REQUEST_METHOD")
