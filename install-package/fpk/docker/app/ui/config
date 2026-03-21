@@ -9,6 +9,16 @@
             "url": "/cgi/ThirdParty/fnpackup/index.cgi/",
             "allUsers": true
         },
+        "fnpackup.proxy.Application": {
+            "title": "在线fpk",
+            "icon": "images/icon_{0}.png",
+            "type": "iframe",
+            "protocol": "http",
+            "port": "",
+            "url": "/cgi/ThirdParty/fnpackup/proxy.cgi/",
+            "allUsers": true,
+            "noDisplay": true
+        },
         "fnpackup.docker.Application": {
             "title": "在线fpk",
             "icon": "images/icon_{0}.png",
