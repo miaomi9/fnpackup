@@ -64,18 +64,6 @@ snltty/fnpackup
     2. 在里面下新建一个文件夹，上传你的静态资源
     3. 文件夹名称就是`{appname}`
 
-### [💾]日志收集
-在`在线fpk`安装的空间(比如vol1)下，有 fnpackup.debug、fnpackup.info、fnpackup.warning、fnpackup.error、fnpackup.fatal 管道文件，往管道内写入信息，就可以在在线fpk的`日志收集`页面查看到。
-
-当然，在应用生命周期脚本中也可以使用`${TRIM_APPDEST_VOL}`变量获取安装空间，比如
-
-```
-
-echo "debug msg" > /${TRIM_APPDEST_VOL}/fnpackup.debug
-echo "debug and error msg" > /${TRIM_APPDEST_VOL}/fnpackup.debug 2>&1
-
-```
-
 
 ## [🖼️]预览效果
 

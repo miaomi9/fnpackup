@@ -18,12 +18,12 @@ const routes = [
         name: 'StaticView',
         component: () => import('@/views/static/View.vue'),
     },
-    {
-        path: '/logger',
-        name: 'Logger',
-        meta: { title: '日志收集',icon:FirstAidKit },
-        component: () => import('@/views/logger/Index.vue'),
-    }
+    // {
+    //     path: '/logger',
+    //     name: 'Logger',
+    //     meta: { title: '日志收集',icon:FirstAidKit },
+    //     component: () => import('@/views/logger/Index.vue'),
+    // }
 ]
 
 const router = createRouter({
