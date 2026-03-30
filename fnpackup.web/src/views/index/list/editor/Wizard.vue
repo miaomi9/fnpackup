@@ -242,6 +242,16 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+html.dark .wizard-tab{ 
+    .field-item{
+        &:nth-child(odd){
+            background-color:rgba(255,255,255,0.03);
+        }
+        &:hover{
+            background-color:rgba(255,255,255,0.05);
+        }
+    }
+}
 .wizard-tab{
     
     .fields{
@@ -255,10 +265,10 @@ export default {
         padding:.5rem .5rem .5rem 0;
         position:relative;
         &:nth-child(odd){
-            background-color:#fafafa;
+            background-color:rgba(0,0,0,0.03);
         }
         &:hover{
-            background-color:#f5f5f5;
+            background-color:rgba(0,0,0,0.05);
             .action{
                 display:block;
             }

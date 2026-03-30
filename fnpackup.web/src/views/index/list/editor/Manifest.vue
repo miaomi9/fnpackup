@@ -170,9 +170,9 @@ export default {
         },{});
 
         const json = Object.assign(defaultJosn,contentJson);
-        json.ctl_stop = json.ctl_stop == 'true';
-        json.checkport = json.checkport == 'true';
-        json.disable_authorization_path = json.disable_authorization_path == 'true';
+        json.ctl_stop = json.ctl_stop === 'true' || json.ctl_stop === true || json.ctl_stop === undefined;
+        json.checkport = json.checkport == 'true'  || json.checkport === true;
+        json.disable_authorization_path = json.disable_authorization_path === 'true' || json.disable_authorization_path === true;
         json.desc = json.desc.replace(/^"""|"""$/g,'');
         const state = reactive({
             ruleForm: json,
