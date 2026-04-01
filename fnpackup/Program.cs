@@ -1,12 +1,10 @@
 using fnpackup.Controllers;
 using Microsoft.AspNetCore.HttpOverrides;
-using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Primitives;
 using System.Collections.Frozen;
 using System.Net;
 using System.Reflection;
-using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Text.Json.Serialization;

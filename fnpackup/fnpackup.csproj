@@ -64,4 +64,9 @@
 	  <EmbeddedResource Include="privatekey.pem" />
 	  <EmbeddedResource Include="publickey.pem" />
 	</ItemGroup>
+	<ItemGroup>
+	  <None Update="fnpack">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
+	</ItemGroup>
 </Project>

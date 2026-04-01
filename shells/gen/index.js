@@ -65,6 +65,26 @@ function writeUploadIpk(data, tagName) {
         });
     }
 }
+function writeUploadWin(data, tagName) {
+    const types = ['win-x86','win-x64','win-arm64'];
+    for (let j = 0; j < types.length; j++) { 
+        const type = types[j];
+        data.jobs.build.steps.push({
+            name: `upload-${type}`,
+            id: `upload--${type}`,
+            uses: 'actions/upload-release-asset@master',
+            env: {
+                'GITHUB_TOKEN': '${{ secrets.ACTIONS_TOKEN }}'
+            },
+            with: {
+                'upload_url': '${{ steps.get_release.outputs.upload_url }}',
+                'asset_path': `./public/publish-zip/fnpackup-${type}.zip`,
+                'asset_name': `fnpackup-${type}.zip`,
+                'asset_content_type': 'application/zip'
+            }
+        });
+    }
+}
 
 
 readVersionDesc().then((desc) => {
@@ -97,6 +117,11 @@ readVersionDesc().then((desc) => {
     installData.jobs.build.steps.filter(c => c.id == 'create_release')[0].with.release_name = `v${desc.version}.\${{ steps.date.outputs.today }}`;
     writeUploadIpk(installData, `v${desc.version}`);
     writeYaml('../../.github/workflows/install.yml', installData);
+
+
+    const winData = readYaml('../ymls/win.yml');
+    writeUploadWin(winData, `v${desc.version}`);
+    writeYaml('../../.github/workflows/install.yml', winData);
 
 
 });

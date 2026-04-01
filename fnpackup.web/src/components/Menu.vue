@@ -77,8 +77,8 @@ export default {
                 '20':'dark',
                 '30':isSystemDarkMode ? 'dark':'light'
             }[localStorage.getItem('fnos-theme-mode') || '30'];
-            //document.querySelector('html').setAttribute('class',theme);
-            document.querySelector('html').setAttribute('class','dark');
+            document.querySelector('html').setAttribute('class',theme);
+            //document.querySelector('html').setAttribute('class','dark');
         }
         const handlePay = ()=>{
             state.showPay = true;
