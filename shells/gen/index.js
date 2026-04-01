@@ -121,7 +121,7 @@ readVersionDesc().then((desc) => {
 
     const winData = readYaml('../ymls/win.yml');
     writeUploadWin(winData, `v${desc.version}`);
-    writeYaml('../../.github/workflows/install.yml', winData);
+    writeYaml('../../.github/workflows/win.yml', winData);
 
 
 });
