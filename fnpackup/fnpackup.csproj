@@ -65,7 +65,7 @@
 	  <EmbeddedResource Include="publickey.pem" />
 	</ItemGroup>
 	<ItemGroup>
-	  <None Update="fnpack">
+	  <None Update="fnpack.exe">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </None>
 	</ItemGroup>
