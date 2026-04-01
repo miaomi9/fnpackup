@@ -57,7 +57,7 @@ function writeUploadIpk(data, tagName) {
                 'GITHUB_TOKEN': '${{ secrets.ACTIONS_TOKEN }}'
             },
             with: {
-                'upload_url': '${{ steps.create_release.outputs.upload_url }}',
+                'upload_url': '${{ steps.get_release.outputs.upload_url }}',
                 'asset_path': `./public/publish-fpk/${type}/fnpackup-${type}.fpk`,
                 'asset_name': `fnpackup-${type}-${tagName}.fpk`,
                 'asset_content_type': 'application/fpk'
@@ -77,7 +77,7 @@ function writeUploadWin(data, tagName) {
                 'GITHUB_TOKEN': '${{ secrets.ACTIONS_TOKEN }}'
             },
             with: {
-                'upload_url': '${{ steps.get_release.outputs.upload_url }}',
+                'upload_url': '${{ steps.create_release.outputs.upload_url }}',
                 'asset_path': `./public/publish-zip/fnpackup-${type}.zip`,
                 'asset_name': `fnpackup-${type}.zip`,
                 'asset_content_type': 'application/zip'
