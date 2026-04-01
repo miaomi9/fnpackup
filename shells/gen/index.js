@@ -79,7 +79,7 @@ function writeUploadWin(data, tagName) {
             with: {
                 'upload_url': '${{ steps.create_release.outputs.upload_url }}',
                 'asset_path': `./public/publish-zip/fnpackup-${type}.zip`,
-                'asset_name': `fnpackup-${type}.zip`,
+                'asset_name': `fnpackup-${type}-${tagName}.zip`,
                 'asset_content_type': 'application/zip'
             }
         });
@@ -122,8 +122,6 @@ readVersionDesc().then((desc) => {
     writeUploadIpk(installData, `v${desc.version}`);
     writeYaml('../../.github/workflows/install.yml', installData);
 
-
-   
 
 
 });
