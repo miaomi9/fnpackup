@@ -15,16 +15,6 @@ jobs:
             "https://api.github.com/repos/${{ github.repository }}/releases/latest")
           upload_url=$(echo "$response" | jq -r '.upload_url')
           echo "upload_url=$upload_url" >> $GITHUB_OUTPUT
-      - name: setup node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: '16'
-      - name: setup dotnet8
-        uses: actions/setup-dotnet@v2
-        env:
-          GITHUB_TOKEN: ${{ secrets.ACTIONS_TOKEN }}
-        with:
-          dotnet-version: 8.0.x
       - name: setup install
         run: sudo apt-get install binutils tar gzip
       - name: sed shell
