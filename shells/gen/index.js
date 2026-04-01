@@ -111,17 +111,19 @@ readVersionDesc().then((desc) => {
     }
     writeText('../publish-fpk.sh', publishFpkText);
 
+    const winData = readYaml('../ymls/win.yml');
+    winData.jobs.build.steps.filter(c => c.id == 'create_release')[0].with.body = desc.desc;
+    winData.jobs.build.steps.filter(c => c.id == 'create_release')[0].with.tag_name = `v${desc.version}`;
+    winData.jobs.build.steps.filter(c => c.id == 'create_release')[0].with.release_name = `v${desc.version}.\${{ steps.date.outputs.today }}`;
+    writeUploadWin(winData, `v${desc.version}`);
+    writeYaml('../../.github/workflows/win.yml', winData);
+
     let installData = readYaml('../ymls/install.yml');
-    installData.jobs.build.steps.filter(c => c.id == 'create_release')[0].with.body = desc.desc;
-    installData.jobs.build.steps.filter(c => c.id == 'create_release')[0].with.tag_name = `v${desc.version}`;
-    installData.jobs.build.steps.filter(c => c.id == 'create_release')[0].with.release_name = `v${desc.version}.\${{ steps.date.outputs.today }}`;
     writeUploadIpk(installData, `v${desc.version}`);
     writeYaml('../../.github/workflows/install.yml', installData);
 
 
-    const winData = readYaml('../ymls/win.yml');
-    writeUploadWin(winData, `v${desc.version}`);
-    writeYaml('../../.github/workflows/win.yml', winData);
+   
 
 
 });
