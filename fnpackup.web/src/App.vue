@@ -17,7 +17,7 @@ export default {
     name: 'App',
     components: {Head,Body},
     setup() {
-        const showHead = computed(()=>window.self === window.top && window.location.href.indexOf('head') == -1);
+        const showHead = computed(()=>window.self === window.top && window.location.href.indexOf('head=') == -1);
         return {showHead}
     },
 }
