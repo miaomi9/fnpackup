@@ -13,7 +13,7 @@
                                 <div class="flex">
                                     <span>{{scope.row.name}}</span>
                                     <router-link :to="{name:'StaticView',query:{name:scope.row.name}}" class="mgl-2 a-line">内嵌打开</router-link>
-                                    <a :href="`${state.baseUrl}${scope.row.name}/?t=${Date.now()}`" target="_blank" class="mgl-1 a-line">新窗口打开</a>
+                                    <a :href="`${state.baseUrl}/${scope.row.name}/?t=${Date.now()}`" target="_blank" class="mgl-1 a-line">新窗口打开</a>
                                 </div>
                                 
                             </template>
@@ -35,10 +35,11 @@ export default {
     components:{Refresh},
     setup () {
 
+        const baseUrl = process.env.NODE_ENV === 'development' ? `http://localhost:1069` : `${window.location.origin}/${window.location.pathname}`
         const state = reactive({
             list:[],
             loading:false,
-            baseUrl: process.env.NODE_ENV === 'development' ? `http://localhost:1069` : `${window.location.origin}/${window.location.pathname}`
+            baseUrl: baseUrl.replace(/\/$/,'')
         });
 
         const getList = () => { 

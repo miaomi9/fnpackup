@@ -1,6 +1,6 @@
 <template>
     <div class="h-100">
-        <iframe :src="`${baseUrl}${$route.query.name}/?t=${Date.now()}`" frameborder="0" width="100%" height="100%"></iframe>
+        <iframe :src="`${baseUrl}/${$route.query.name}/?t=${Date.now()}`" frameborder="0" width="100%" height="100%"></iframe>
     </div>
 </template>
 
@@ -10,7 +10,10 @@ import { computed } from 'vue';
 export default {
     setup () {
 
-        const baseUrl = computed(()=>process.env.NODE_ENV === 'development' ? `http://localhost:1069` : `${window.location.origin}/${window.location.pathname}`);
+        const baseUrl = computed(()=>{
+            const baseUrl = process.env.NODE_ENV === 'development' ? `http://localhost:1069` : `${window.location.origin}/${window.location.pathname}`;
+            return baseUrl.replace(/\/$/,'');
+        });
 
         return {baseUrl}
     }
