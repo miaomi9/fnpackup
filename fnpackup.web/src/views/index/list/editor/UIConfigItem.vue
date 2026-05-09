@@ -35,7 +35,7 @@
             </el-form-item>
             <el-form-item label="">
                 <div class="flex w-100">
-                    <span>{{ item.protocol }}://fn_ip:{{ item.port }}{{ item.url }}</span>
+                    <span>{{ item.protocol || 'http' }}://fn_ip:{{ item.port || '5666' }}{{ item.url }}</span>
                     <span class="flex-1"></span>
                     <span>
                         <el-radio-group v-model="item.type">
@@ -43,6 +43,25 @@
                             <el-radio value="iframe">内嵌打开</el-radio>
                         </el-radio-group>
                     </span>
+                </div>
+            </el-form-item>
+            <el-form-item label="网关注册">
+                <el-row>
+                    <el-col :span="12">
+                        <el-form-item label="访问前缀" prop="gatewayPrefix">
+                            <el-input v-model="item.gatewayPrefix" placeholder="/app/{appname}" />
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="sock文件名" prop="gatewaySocket">
+                            <el-input v-model="item.gatewaySocket" placeholder="app.sock" />
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+            </el-form-item>
+            <el-form-item label="" v-if="item.gatewayPrefix">
+                <div class="flex w-100">
+                    {{ item.protocol || 'http' }}://fn_ip:{{ item.port || '5666' }}{{item.gatewayPrefix }} 会转发到 /var/apps/{{item._key.split('.')[0]}}/target/{{item.gatewaySocket}}
                 </div>
             </el-form-item>
             <el-form-item label="访问权限" prop="allUsers">

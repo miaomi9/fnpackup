@@ -35,7 +35,9 @@ export default {
                 "control": {
                     "accessPerm": "readonly"
                 },
-                "protocol":'http'
+                "protocol":'http',
+                'gatewayPrefix':'',
+                'gatewaySocket':'',
             },json);
         }
 
